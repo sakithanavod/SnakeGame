@@ -9,11 +9,11 @@
 using namespace std::chrono_literals;
 
 //initialize console/window variables
-const int nScreenWidth = 120;
-const int nScreenHeight = 30;
-const int HorizontalOffset = 20;
-const int VerticalOffset = 5;
-static wchar_t* screen = new wchar_t[nScreenWidth * nScreenHeight];
+const int SCREEN_WIDITH = 120;
+const int SCREEN_HEIGHT = 30;
+const int HORIZONTAL_OFFSET = 20;
+const int VERTICAL_OFFSET = 5;
+static wchar_t* screen = new wchar_t[SCREEN_WIDITH * SCREEN_HEIGHT];
 
 //enum to set snake move direction
 enum EDirection
@@ -61,22 +61,22 @@ public:
 	{
 		//determining a random location within boundries to spawn food
 		//rand()%(max-min+1)+min;
-		m_CurrentPosiiton.m_X = rand() % (nScreenWidth - 2 * HorizontalOffset) + HorizontalOffset+1;
-		m_CurrentPosiiton.m_Y = rand() % (nScreenHeight- 3*VerticalOffset +1) + VerticalOffset;
+		m_CurrentPosiiton.m_X = rand() % (SCREEN_WIDITH - 2 * HORIZONTAL_OFFSET) + HORIZONTAL_OFFSET+1;
+		m_CurrentPosiiton.m_Y = rand() % (SCREEN_HEIGHT- 3*VERTICAL_OFFSET +1) + VERTICAL_OFFSET;
 
 		//if the determined positon is already have a character then determine again
-		if (screen[m_CurrentPosiiton.m_X + m_CurrentPosiiton.m_Y * nScreenWidth] != L' ') { MoveFood(); }
+		if (screen[m_CurrentPosiiton.m_X + m_CurrentPosiiton.m_Y * SCREEN_WIDITH] != L' ') { MoveFood(); }
 
 	}
 
 	//draws food to screen
-	void DrawFood()
+	void DrawFood() const
 	{
-		screen[m_CurrentPosiiton.m_X+ m_CurrentPosiiton.m_Y*nScreenWidth] = L'%';
+		screen[m_CurrentPosiiton.m_X+ m_CurrentPosiiton.m_Y*SCREEN_WIDITH] = L'%';
 	}
 
 	//getter to get current postion of food
-	Point GetCurrenPos()
+	Point GetCurrenPos() const
 	{
 		return m_CurrentPosiiton;
 	}
@@ -114,7 +114,7 @@ public:
 	{
 		for (const Point &point : m_SnakeBody) 
 		{
-			screen[point.m_X + nScreenWidth * point.m_Y ] = snakeArt;
+			screen[point.m_X + SCREEN_WIDITH * point.m_Y ] = snakeArt;
 		}
 
 	}
@@ -152,7 +152,7 @@ public:
 	}
 
 	//check if snake hits its own body
-	bool HitSelf()
+	bool HitSelf() const
 	{
 		for(auto i= m_SnakeBody.begin();i!=m_SnakeBody.end();i++)
 		{
@@ -169,13 +169,13 @@ public:
 	}
 
 	//helper to get snake head coordinates
-	Point GetHeadPos()
+	Point GetHeadPos() const
 	{
 		return m_SnakeBody.front();
 	}
 
 	//helper to get snake tail coordinates
-	Point GeTailPos()
+	Point GeTailPos() const
 	{
 		return m_SnakeBody.back();
 	}
@@ -186,18 +186,18 @@ public:
 void DrawLevel(wchar_t* screen)
 {
 	//Draw top & bottom horizontal line
-	for (int i = 0; i < (nScreenWidth - HorizontalOffset * 2); i++)
+	for (int i = 0; i < (SCREEN_WIDITH - HORIZONTAL_OFFSET * 2); i++)
 	{
-		screen[nScreenWidth * 4 + HorizontalOffset + i] = L'_';
-		screen[nScreenWidth * 20 + HorizontalOffset + i] = L'_';
+		screen[SCREEN_WIDITH * 4 + HORIZONTAL_OFFSET + i] = L'_';
+		screen[SCREEN_WIDITH * 20 + HORIZONTAL_OFFSET + i] = L'_';
 	}
 
 
 	//Draw vertical left & right line
-	for (int i = VerticalOffset - 1; i <= nScreenHeight - VerticalOffset * 2; i++)
+	for (int i = VERTICAL_OFFSET - 1; i <= SCREEN_HEIGHT - VERTICAL_OFFSET * 2; i++)
 	{
-		screen[nScreenWidth * i + HorizontalOffset] = L'|';
-		screen[nScreenWidth * i + HorizontalOffset * 5] = L'|';
+		screen[SCREEN_WIDITH * i + HORIZONTAL_OFFSET] = L'|';
+		screen[SCREEN_WIDITH * i + HORIZONTAL_OFFSET * 5] = L'|';
 	}
 
 
@@ -206,7 +206,7 @@ void DrawLevel(wchar_t* screen)
 void ClearScreen()
 {
 	//Clear screen
-	for (int i = 0; i < nScreenHeight * nScreenWidth; i++)
+	for (int i = 0; i < SCREEN_HEIGHT * SCREEN_WIDITH; i++)
 	{
 		screen[i] = L' ';
 	}
@@ -216,24 +216,24 @@ void DrawInfo(const int& score)
 {
 
 	//Draw Stats & Border
-	for (int i = 0; i < nScreenWidth; i++)
+	for (int i = 0; i < SCREEN_WIDITH; i++)
 	{
 		screen[i] = L'=';
-		screen[nScreenWidth * 2 + i] = L'=';
+		screen[SCREEN_WIDITH * 2 + i] = L'=';
 	}
 
-	wsprintf(&screen[nScreenWidth + 3], L"Verison:1                                       Saki Games - SNAKE!!                                     SCORE: %d",score);
+	wsprintf(&screen[SCREEN_WIDITH + 3], L"Verison:1                                       Saki Games - SNAKE!!                                     SCORE: %d",score);
 }
 
 void DrawEndScreen()
 {
-	wsprintf(&screen[23*nScreenWidth + 45], L"GAME OVER - PRESS SPACE TO RESTART");
+	wsprintf(&screen[23*SCREEN_WIDITH + 45], L"GAME OVER - PRESS SPACE TO RESTART");
 }
 
 int main()
 {
 	// Create Screen Buffer
-	for (int i = 0; i < nScreenWidth * nScreenHeight; i++) screen[i] = L' ';
+	for (int i = 0; i < SCREEN_WIDITH * SCREEN_HEIGHT; i++) screen[i] = L' ';
 	HANDLE hConsole = CreateConsoleScreenBuffer(GENERIC_READ | GENERIC_WRITE, 0, NULL, CONSOLE_TEXTMODE_BUFFER, NULL);
 	SetConsoleActiveScreenBuffer(hConsole);
 	DWORD dwBytesWritten = 0;
@@ -290,23 +290,23 @@ int main()
 
 
 			//Coliision detection with boundry
-			for (int i = 0; i < (nScreenWidth - HorizontalOffset * 2); i++)
+			for (int i = 0; i < (SCREEN_WIDITH - HORIZONTAL_OFFSET * 2); i++)
 			{
-				int snakeCor = snake.GetHeadPos().m_X + nScreenWidth * snake.GetHeadPos().m_Y;
+				int snakeCor = snake.GetHeadPos().m_X + SCREEN_WIDITH * snake.GetHeadPos().m_Y;
 
-				if (((nScreenWidth * 4 + HorizontalOffset + i) == (snakeCor)) ||
-					((nScreenWidth * 20 + HorizontalOffset + i) == (snakeCor)))
+				if (((SCREEN_WIDITH * 4 + HORIZONTAL_OFFSET + i) == (snakeCor)) ||
+					((SCREEN_WIDITH * 20 + HORIZONTAL_OFFSET + i) == (snakeCor)))
 				{
 					isDead = true;
 				}
 			}
 
-			for (int i = VerticalOffset - 1; i <= nScreenHeight - VerticalOffset * 2; i++)
+			for (int i = VERTICAL_OFFSET - 1; i <= SCREEN_HEIGHT - VERTICAL_OFFSET * 2; i++)
 			{
-				int snakeCor = snake.GetHeadPos().m_X + nScreenWidth * snake.GetHeadPos().m_Y;
+				int snakeCor = snake.GetHeadPos().m_X + SCREEN_WIDITH * snake.GetHeadPos().m_Y;
 
-				if (((nScreenWidth * i + HorizontalOffset) == (snakeCor)) ||
-					((nScreenWidth * i + HorizontalOffset * 5) == (snakeCor)))
+				if (((SCREEN_WIDITH * i + HORIZONTAL_OFFSET) == (snakeCor)) ||
+					((SCREEN_WIDITH * i + HORIZONTAL_OFFSET * 5) == (snakeCor)))
 				{
 					isDead = true;
 				}
@@ -332,7 +332,7 @@ int main()
 
 
 			//Display Frame
-			WriteConsoleOutputCharacter(hConsole, screen, nScreenWidth * nScreenHeight, { 0,0 }, &dwBytesWritten);
+			WriteConsoleOutputCharacter(hConsole, screen, SCREEN_WIDITH * SCREEN_HEIGHT, { 0,0 }, &dwBytesWritten);
 		}
 
 		//wait till space bar input to restart game
